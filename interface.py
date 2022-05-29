@@ -41,6 +41,18 @@ def load_data_cifar100(tf_train, tf_test, batch_size=128):
                                              shuffle=False, num_workers=0)
     return trainloader, testloader
 
+def train_batch_ch13(net, X, y, loss, trainer, devices):
+    X = X.to(devices[0])
+    y = y.to(devices[0])
+    net.train()
+    trainer.zero_grad()
+    pred = net(X)
+    l = loss(pred, y)
+    l.sum().backward()
+    trainer.step()
+    train_loss_sum = l.sum()
+    train_acc_sum = d2l.accuracy(pred, y)
+    return train_loss_sum, train_acc_sum
 
 def train(net, train_iter, valid_iter, num_epochs, lr, loss, wd, devices, lr_period,
           lr_decay):
