@@ -128,6 +128,21 @@ def train(net, train_iter, valid_iter, num_epochs, lr, wd, devices, lr_period,
         measures += f', valid acc {valid_acc:.3f}'
     print(measures + f'\n{metric[2] * num_epochs / timer.sum():.1f}'
                      f' examples/sec on {str(devices)}')
+
+def evaluate_accuracy_gpu(net, data_iter, device=None):
+    if isinstance(net, nn.Module):
+        net.eval()
+        if not device:
+            device = next(iter(net.parameters())).device
+    metric = d2l.Accumulator(2)
+
+    with torch.no_grad():
+        for X, y in data_iter:
+            X = X.to(device)
+            y = y.to(device)
+            metric.add(d2l.accuracy(net(X), y), d2l.size(y))
+    return metric[0] / metric[1]
+
 def evaluate_accuracy_gpu(net, data_iter, loss, device=None):
     if isinstance(net, nn.Module):
         net.eval()
