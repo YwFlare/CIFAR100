@@ -33,8 +33,8 @@ def load_data_cifar100(batch_size=128):
 
 
 def train_batch(net, X, y, loss, trainer, devices):
-    X = X.to(devices[0])
-    y = y.to(devices[0])
+    X = X.to(devices)
+    y = y.to(devices)
     net.train()
     trainer.zero_grad()
     pred = net(X)
@@ -46,26 +46,24 @@ def train_batch(net, X, y, loss, trainer, devices):
     return train_loss_sum, train_acc_sum
 
 
-def train(net, train_iter, valid_iter, num_epochs, lr, wd, devices, lr_period,
-          lr_decay):
-    trainer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9,
-                              weight_decay=wd)
-    loss = nn.CrossEntropyLoss(reduction="none")
-    scheduler = torch.optim.lr_scheduler.StepLR(trainer, lr_period, lr_decay)
+def train(net, train_iter, valid_iter, num_epochs, loss, trainer, lr_period,
+          lr_decay, use_sl=True, device=d2l.try_gpu()):
+    if use_sl:
+        scheduler = torch.optim.lr_scheduler.StepLR(trainer, lr_period, lr_decay)
     num_batches, timer = len(train_iter), d2l.Timer()
     legend = ['train loss', 'train acc']
     if valid_iter is not None:
         legend.append('valid acc')
     animator = d2l.Animator(xlabel='epoch', xlim=[1, num_epochs],
                             legend=legend)
-    net = nn.DataParallel(net, device_ids=devices).to(devices[0])
+    net = net.to(device)
     for epoch in range(num_epochs):
         net.train()
         metric = d2l.Accumulator(3)
         for i, (features, labels) in enumerate(train_iter):
             timer.start()
             l, acc = train_batch(net, features, labels, loss,
-                                 trainer, devices)
+                                 trainer, device)
             metric.add(l, acc, labels.shape[0])
             timer.stop()
             if (i + 1) % (num_batches // 5) == 0 or i == num_batches - 1:
@@ -75,14 +73,14 @@ def train(net, train_iter, valid_iter, num_epochs, lr, wd, devices, lr_period,
         if valid_iter is not None:
             valid_acc = evaluate_accuracy(net, valid_iter)
             animator.add(epoch + 1, (None, None, valid_acc))
-        scheduler.step()
+        if use_sl:
+            scheduler.step()
     measures = (f'train loss {metric[0] / metric[2]:.3f}, '
                 f'train acc {metric[1] / metric[2]:.3f}')
     if valid_iter is not None:
         measures += f', valid acc {valid_acc:.3f}'
     print(measures + f'\n{metric[2] * num_epochs / timer.sum():.1f}'
-                     f' examples/sec on {str(devices)}')
-    d2l.plt.show()
+                     f' examples/sec on {str(device)}')
 
 
 def evaluate_accuracy(net, data_iter, device=None):
@@ -98,3 +96,21 @@ def evaluate_accuracy(net, data_iter, device=None):
             y = y.to(device)
             metric.add(d2l.accuracy(net(X), y), d2l.size(y))
     return metric[0] / metric[1]
+
+
+def train_fine_tuning(net, learning_rate, lr_period, lr_decay, batch_size=128, num_epochs=5,
+                      param_group=True):
+    train_iter, valid_iter = load_data_cifar100(batch_size)
+    loss = nn.CrossEntropyLoss(reduction="none")
+    if param_group:
+        params_1x = [param for name, param in net.named_parameters()
+                     if name not in ["fc.weight", "fc.bias"]]
+        trainer = torch.optim.SGD([{'params': params_1x},
+                                   {'params': net.fc.parameters(),
+                                    'lr': learning_rate * 10}],
+                                  lr=learning_rate, weight_decay=0.001)
+    else:
+        trainer = torch.optim.SGD(net.parameters(), lr=learning_rate,
+                                  weight_decay=0.001)
+    train(net, train_iter, valid_iter, num_epochs, loss, trainer, lr_period,
+          lr_decay)
