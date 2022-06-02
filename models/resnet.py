@@ -92,3 +92,22 @@ class ResNet(nn.Module):
         output = self.fc(output)
 
         return output
+
+def resnet18():
+    return ResNet(BasicBlock, [2, 2, 2, 2])
+
+
+def resnet34():
+    return ResNet(BasicBlock, [3, 4, 6, 3])
+
+
+def resnet50():
+    return ResNet(BottleNeck, [3, 4, 6, 3])
+
+
+def resnet101():
+    return ResNet(BottleNeck, [3, 4, 23, 3])
+
+
+def resnet152():
+    return ResNet(BottleNeck, [3, 8, 36, 3])
