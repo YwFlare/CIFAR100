@@ -7,6 +7,8 @@ from d2l import torch as d2l
 
 def load_data_cifar100(batch_size=128):
     transform_train = torchvision.transforms.Compose([
+        # torchvision.transforms.Resize(256),
+        # torchvision.transforms.CenterCrop(224),
         torchvision.transforms.Resize(40),
         torchvision.transforms.RandomResizedCrop(32, scale=(0.64, 1.0),
                                                  ratio=(1.0, 1.0)),
@@ -16,6 +18,8 @@ def load_data_cifar100(batch_size=128):
                                          [0.2023, 0.1994, 0.2010])])
 
     transform_test = torchvision.transforms.Compose([
+        # torchvision.transforms.Resize(256),
+        # torchvision.transforms.CenterCrop(224),
         torchvision.transforms.ToTensor(),
         torchvision.transforms.Normalize([0.4914, 0.4822, 0.4465],
                                          [0.2023, 0.1994, 0.2010])])
@@ -98,10 +102,8 @@ def evaluate_accuracy(net, data_iter, device=None):
     return metric[0] / metric[1]
 
 
-def train_fine_tuning(net, learning_rate, lr_period, lr_decay, batch_size=128, num_epochs=5,
+def train_fine_tuning(net, learning_rate, lr_period, lr_decay, train_iter, valid_iter, loss, num_epochs=5,
                       param_group=True):
-    train_iter, valid_iter = load_data_cifar100(batch_size)
-    loss = nn.CrossEntropyLoss(reduction="none")
     if param_group:
         params_1x = [param for name, param in net.named_parameters()
                      if name not in ["fc.weight", "fc.bias"]]
