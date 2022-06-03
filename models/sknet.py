@@ -2,9 +2,6 @@ import torch
 from torch import nn
 
 
-# from thop import profile
-# from thop import clever_format
-
 class SKConv(nn.Module):
     def __init__(self, features, M=2, G=32, r=16, stride=1, L=32):
 
@@ -52,7 +49,7 @@ class SKConv(nn.Module):
 
         return feats_V
 
-        
+
 class SKUnit(nn.Module):
     def __init__(self, in_features, mid_features, out_features, M=2, G=32, r=16, stride=1, L=32):
 
@@ -89,6 +86,7 @@ class SKUnit(nn.Module):
         out = self.conv3(out)
 
         return self.relu(out + self.shortcut(residual))
+
 
 class SKNet(nn.Module):
     def __init__(self, class_num, nums_block_list=[3, 4, 6, 3], strides_list=[1, 2, 2, 2]):
@@ -127,6 +125,7 @@ class SKNet(nn.Module):
         fea = self.classifier(fea)
         return fea
 
+
 def SKNet26(nums_class=1000):
     return SKNet(nums_class, [2, 2, 2, 2])
 
@@ -143,9 +142,3 @@ if __name__ == '__main__':
     x = torch.rand(8, 3, 224, 224)
     model = SKNet26()
     out = model(x)
-
-    # flops, params = profile(model, (x, ))
-    # flops, params = clever_format([flops, params], "%.5f")
-
-    # print(flops, params)
-    # print('out shape : {}'.format(out.shape))
