@@ -51,3 +51,41 @@ class SKConv(nn.Module):
         feats_V = torch.sum(feats * attention_vectors, dim=1)
 
         return feats_V
+
+        
+class SKUnit(nn.Module):
+    def __init__(self, in_features, mid_features, out_features, M=2, G=32, r=16, stride=1, L=32):
+
+        super(SKUnit, self).__init__()
+
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(in_features, mid_features, 1, stride=1, bias=False),
+            nn.BatchNorm2d(mid_features),
+            nn.ReLU(inplace=True)
+        )
+
+        self.conv2_sk = SKConv(mid_features, M=M, G=G, r=r, stride=stride, L=L)
+
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(mid_features, out_features, 1, stride=1, bias=False),
+            nn.BatchNorm2d(out_features)
+        )
+
+        if in_features == out_features:  # when dim not change, in could be added diectly to out
+            self.shortcut = nn.Sequential()
+        else:  # when dim not change, in should also change dim to be added to out
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_features, out_features, 1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_features)
+            )
+
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.conv2_sk(out)
+        out = self.conv3(out)
+
+        return self.relu(out + self.shortcut(residual))
