@@ -121,6 +121,7 @@ class SKNet(nn.Module):
         fea = self.stage_1(fea)
         fea = self.stage_2(fea)
         fea = self.stage_3(fea)
+        fea = self.stage_4(fea)
         fea = self.gap(fea)
         fea = torch.squeeze(fea)
         fea = self.classifier(fea)
