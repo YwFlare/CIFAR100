@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 class BasicBlock(nn.Module):
     expansion = 1
 
@@ -25,6 +26,7 @@ class BasicBlock(nn.Module):
 
     def forward(self, x):
         return nn.ReLU(inplace=True)(self.residual_function(x) + self.shortcut(x))
+
 
 class BottleNeck(nn.Module):
     expansion = 4
@@ -52,6 +54,7 @@ class BottleNeck(nn.Module):
 
     def forward(self, x):
         return nn.ReLU(inplace=True)(self.residual_function(x) + self.shortcut(x))
+
 
 class ResNet(nn.Module):
 
@@ -92,6 +95,7 @@ class ResNet(nn.Module):
         output = self.fc(output)
 
         return output
+
 
 def resnet18():
     return ResNet(BasicBlock, [2, 2, 2, 2])
