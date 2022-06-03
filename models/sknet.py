@@ -89,3 +89,39 @@ class SKUnit(nn.Module):
         out = self.conv3(out)
 
         return self.relu(out + self.shortcut(residual))
+
+class SKNet(nn.Module):
+    def __init__(self, class_num, nums_block_list=[3, 4, 6, 3], strides_list=[1, 2, 2, 2]):
+        super(SKNet, self).__init__()
+        self.basic_conv = nn.Sequential(
+            nn.Conv2d(3, 64, 7, 2, 3, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+        )
+
+        self.maxpool = nn.MaxPool2d(3, 2, 1)
+
+        self.stage_1 = self._make_layer(64, 128, 128, nums_block=nums_block_list[0], stride=strides_list[0])
+        self.stage_2 = self._make_layer(128, 256, 512, nums_block=nums_block_list[1], stride=strides_list[1])
+        self.stage_3 = self._make_layer(512, 512, 1024, nums_block=nums_block_list[2], stride=strides_list[2])
+        self.stage_4 = self._make_layer(1024, 1024, 2048, nums_block=nums_block_list[3], stride=strides_list[3])
+
+        self.gap = nn.AdaptiveAvgPool2d((1, 1))
+        self.classifier = nn.Linear(2048, class_num)
+
+    def _make_layer(self, in_feats, mid_feats, out_feats, nums_block, stride=1):
+        layers = [SKUnit(in_feats, mid_feats, out_feats, stride=stride)]
+        for _ in range(1, nums_block):
+            layers.append(SKUnit(out_feats, mid_feats, out_feats))
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        fea = self.basic_conv(x)
+        fea = self.maxpool(fea)
+        fea = self.stage_1(fea)
+        fea = self.stage_2(fea)
+        fea = self.stage_3(fea)
+        fea = self.gap(fea)
+        fea = torch.squeeze(fea)
+        fea = self.classifier(fea)
+        return fea
