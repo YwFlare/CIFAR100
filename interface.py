@@ -112,7 +112,5 @@ def train_fine_tuning(net, learning_rate, lr_period, lr_decay, train_iter, valid
                                     'lr': learning_rate * 10}],
                                   lr=learning_rate, weight_decay=0.001)
     else:
-        trainer = torch.optim.SGD(net.parameters(), lr=learning_rate,
-                                  weight_decay=0.001)
-    train(net, train_iter, valid_iter, num_epochs, loss, trainer, lr_period,
-          lr_decay)
+        trainer = torch.optim.SGD(net.parameters(), lr=learning_rate, weight_decay=0.001)
+    train(net, train_iter, valid_iter, num_epochs, loss, trainer, lr_period, lr_decay)
