@@ -1,7 +1,6 @@
 from torch import nn
 import torch
 import torch.nn.functional as F
-from interface import *
 
 
 class DoubleAttention(nn.Module):
@@ -159,13 +158,4 @@ def resnet152_A2():
 
 if __name__ == '__main__':
     net = resnet50_A2()
-    devices = d2l.try_gpu()
-    num_epochs = 10
-    lr = 2e-4
-    wd = 5e-4
-    lr_period = 4
-    lr_decay = 0.1
-    trainloader, validloader = load_data_cifar100()
-    loss = nn.CrossEntropyLoss(reduction="none")
-    trainer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=wd)
-    train(net, trainloader, validloader, num_epochs, loss, trainer, lr_period, lr_decay)
+    print(net)

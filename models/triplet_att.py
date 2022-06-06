@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from interface import *
 
 
 class BasicConv(nn.Module):
@@ -199,13 +198,4 @@ def resnet152_ta():
 
 if __name__ == "__main__":
     net = resnet50_ta()
-    devices = d2l.try_gpu()
-    num_epochs = 100
-    lr = 2e-4
-    wd = 5e-4
-    lr_period = 50
-    lr_decay = 0.1
-    trainloader, validloader = load_data_cifar100()
-    loss = nn.CrossEntropyLoss(reduction="none")
-    trainer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=wd)
-    train(net, trainloader, validloader, num_epochs, loss, trainer, lr_period, lr_decay)
+    print(net)

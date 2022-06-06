@@ -154,21 +154,26 @@ class ResNet(nn.Module):
         return output
 
 
-def resnet18_ca():
+def resnet18_coordatt():
     return ResNet(BasicBlock, [2, 2, 2, 2])
 
 
-def resnet34_ca():
+def resnet34_coordatt():
     return ResNet(BasicBlock, [3, 4, 6, 3])
 
 
-def resnet50_ca():
+def resnet50_coordatt():
     return ResNet(BottleNeck, [3, 4, 6, 3])
 
 
-def resnet101_ca():
+def resnet101_coordatt():
     return ResNet(BottleNeck, [3, 4, 23, 3])
 
 
-def resnet152_ca():
+def resnet152_coordatt():
     return ResNet(BottleNeck, [3, 8, 36, 3])
+
+
+if __name__ == '__main__':
+    net = resnet50_coordatt()
+    print(net)

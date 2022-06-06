@@ -115,3 +115,8 @@ def resnet101():
 
 def resnet152():
     return ResNet(BottleNeck, [3, 8, 36, 3])
+
+
+if __name__ == '__main__':
+    net = resnet50()
+    print(net)

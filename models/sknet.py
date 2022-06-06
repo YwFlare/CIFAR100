@@ -126,19 +126,18 @@ class SKNet(nn.Module):
         return fea
 
 
-def SKNet26(nums_class=1000):
+def SKNet26(nums_class=100):
     return SKNet(nums_class, [2, 2, 2, 2])
 
 
-def SKNet50(nums_class=1000):
+def SKNet50(nums_class=100):
     return SKNet(nums_class, [3, 4, 6, 3])
 
 
-def SKNet101(nums_class=1000):
+def SKNet101(nums_class=100):
     return SKNet(nums_class, [3, 4, 23, 3])
 
 
 if __name__ == '__main__':
-    x = torch.rand(8, 3, 224, 224)
-    model = SKNet26()
-    out = model(x)
+    net = SKNet50(100)
+    print(net)

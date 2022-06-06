@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import math
 
@@ -113,3 +114,8 @@ def mobilenext(**kwargs):
     Constructs a MobileNeXt model
     """
     return MobileNeXt(**kwargs)
+
+
+if __name__ == "__main__":
+    net = mobilenext(num_classes=100)
+    print(net)

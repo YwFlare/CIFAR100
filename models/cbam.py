@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+
 try:
     from torch.hub import load_state_dict_from_url
 except ImportError:
@@ -149,29 +150,61 @@ class ResNet(nn.Module):
         return output
 
 
-def resnet18():
-    return ResNet(BasicBlock, [2, 2, 2, 2])
-
-
-def resnet34():
-    return ResNet(BasicBlock, [3, 4, 6, 3])
-
-
-def cbam50(pretrained=False, progress=True):
-    model = ResNet(BottleNeck, [3, 4, 6, 3])
+def resnet18_cbam(pretrained=False, progress=True):
+    model = ResNet(BasicBlock, [2, 2, 2, 2])
     if pretrained:
-        state_dict = load_state_dict_from_url('models/resnet50-19c8e357.pth',
+        state_dict = load_state_dict_from_url("https://download.pytorch.org/models/resnet50-0676ba61.pth",
                                               progress=progress)
         new_state_dict = model.state_dict()
         new_state_dict.update(state_dict)
         model.load_state_dict(new_state_dict)
-
     return model
 
 
-def resnet101():
-    return ResNet(BottleNeck, [3, 4, 23, 3])
+def resnet34_cbam(pretrained=False, progress=True):
+    model = ResNet(BasicBlock, [3, 4, 6, 3])
+    if pretrained:
+        state_dict = load_state_dict_from_url("https://download.pytorch.org/models/resnet50-0676ba61.pth",
+                                              progress=progress)
+        new_state_dict = model.state_dict()
+        new_state_dict.update(state_dict)
+        model.load_state_dict(new_state_dict)
+    return model
 
 
-def resnet152():
-    return ResNet(BottleNeck, [3, 8, 36, 3])
+def resnet50_cbam(pretrained=False, progress=True):
+    model = ResNet(BottleNeck, [3, 4, 6, 3])
+    if pretrained:
+        state_dict = load_state_dict_from_url("https://download.pytorch.org/models/resnet50-0676ba61.pth",
+                                              progress=progress)
+        new_state_dict = model.state_dict()
+        new_state_dict.update(state_dict)
+        model.load_state_dict(new_state_dict)
+    return model
+
+
+def resnet101_cbam(pretrained=False, progress=True):
+    model = ResNet(BottleNeck, [3, 4, 23, 3])
+    if pretrained:
+        state_dict = load_state_dict_from_url("https://download.pytorch.org/models/resnet50-0676ba61.pth",
+                                              progress=progress)
+        new_state_dict = model.state_dict()
+        new_state_dict.update(state_dict)
+        model.load_state_dict(new_state_dict)
+    return model
+
+
+def resnet152_cbam(pretrained=False, progress=True):
+    model = ResNet(BottleNeck, [3, 8, 36, 3])
+    if pretrained:
+        state_dict = load_state_dict_from_url("https://download.pytorch.org/models/resnet50-0676ba61.pth",
+                                              progress=progress)
+        new_state_dict = model.state_dict()
+        new_state_dict.update(state_dict)
+        model.load_state_dict(new_state_dict)
+    return model
+
+
+if __name__ == '__main__':
+    net = resnet50_cbam()
+    print(net)
