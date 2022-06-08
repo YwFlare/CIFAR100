@@ -9,7 +9,6 @@ from models.triplet_att import *
 from models.A2 import *
 from models.non_local import *
 from models.gcnet import *
-from models.mixcs import *
 from models.mixsc import *
 
 model = [
