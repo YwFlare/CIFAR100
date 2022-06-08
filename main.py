@@ -9,6 +9,8 @@ from models.triplet_att import *
 from models.A2 import *
 from models.non_local import *
 from models.gcnet import *
+from models.mixcs import *
+from models.mixsc import *
 
 model = [
     'A2',
@@ -20,7 +22,8 @@ model = [
     'non_local',
     'resnet',
     'sknet',
-    'triplet_att'
+    'triplet_att',
+    'mixsc'
 ]
 
 A2 = resnet50_A2()
@@ -34,8 +37,9 @@ non_local = resnet50_nl()
 resnet = resnet50()
 sknet = SKNet50()
 triplet_att = resnet50_ta()
+mixsc = resnet50_sc()
 
-nets = [A2, cbam, coordatt, gcnet, mlp_mixer, mob, non_local, resnet, sknet, triplet_att]
+nets = [A2, cbam, coordatt, gcnet, mlp_mixer, mob, non_local, resnet, sknet, triplet_att, mixsc]
 device = d2l.try_gpu()
 trainloader, validloader = load_data_cifar100()
 for i, net in enumerate(nets):
