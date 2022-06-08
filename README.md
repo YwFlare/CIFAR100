@@ -25,18 +25,6 @@ We replace MLP with Conv1D of CBAM's channel attention. Experiments show that th
 
 
 
-## File directory
-
-- hyperparameters: we use unified hyperparameters to test the model
-
-- models: the code of models
-- pth: trained model by unified hyperparameters
-- notebook: the papers we read
-- interface.py: encapsulated functions, such as train, load_data and so on
-- main.py: get acc of all models
-
-
-
 ## Usage
 
 Use the following instructions, you can get acc of all models we have trained:
@@ -67,6 +55,22 @@ python main.py
 | 14   | MLP-Mixer                  | 4.38      | 38.76  | 31.7     |
 | 15   | Mobilenext                 | 2.15      | 0.0062 | 36.8     |
 
+
+
+## File directory
+
+- hyperparameters: we use unified hyperparameters to test the model
+
+- models: the code of models
+- pth: trained model by unified hyperparameters
+- notebook: the papers we read
+- interface.py: encapsulated functions, such as train, load_data and so on
+- main.py: get acc of all models
+
+
+
 ## Pay attention
+
+Because 'pth' folder is too large, we aren't able to upload it, you can get it from the link of [Baidu Cloud](https://pan.baidu.com/s/1p2PsJAh5fcysemELgxp-mg). (Password is b5i0) 
 
 We are new to the field of deep learning, maybe something above is wrong, you can contact me by email.
