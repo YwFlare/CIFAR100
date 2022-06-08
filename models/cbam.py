@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchstat import stat
 
 try:
     from torch.hub import load_state_dict_from_url
@@ -207,4 +208,4 @@ def resnet152_cbam(pretrained=False, progress=True):
 
 if __name__ == '__main__':
     net = resnet50_cbam()
-    print(net)
+    stat(net, (3, 32, 32))

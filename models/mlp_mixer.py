@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from thop import profile
 
 
 class MLP(nn.Module):
@@ -98,4 +99,6 @@ class MLPMixer(nn.Module):
 if __name__ == "__main__":
     net = MLPMixer(in_channels=3, dim=256, token_mix=128, channel_mix=1024, img_size=32, patch_size=4, depth=8,
                    num_classes=100)
-    print(net)
+    input = torch.randn(128, 3, 32, 32)
+    flops, params = profile(net, inputs=(input,))
+    print(flops / 1e9, params / 1e6)

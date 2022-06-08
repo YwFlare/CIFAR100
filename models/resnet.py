@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchstat import stat
 
 
 class BasicBlock(nn.Module):
@@ -119,4 +120,4 @@ def resnet152():
 
 if __name__ == '__main__':
     net = resnet50()
-    print(net)
+    stat(net, (3, 32, 32))

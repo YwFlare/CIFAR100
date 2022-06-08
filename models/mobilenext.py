@@ -4,6 +4,8 @@ import math
 
 __all__ = ['mobilenext']
 
+from torchstat import stat
+
 
 def _make_divisible(v, divisor, min_value=None):
     if min_value is None:
@@ -118,4 +120,4 @@ def mobilenext(**kwargs):
 
 if __name__ == "__main__":
     net = mobilenext(num_classes=100)
-    print(net)
+    stat(net, (3, 32, 32))

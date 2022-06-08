@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchstat import stat
 
 
 class GlobalContextBlock(nn.Module):
@@ -198,4 +199,4 @@ def resnet152_gc():
 
 if __name__ == '__main__':
     net = resnet50_gc()
-    print(net)
+    stat(net, (3, 32, 32))

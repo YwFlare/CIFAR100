@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchstat import stat
 
 
 class BasicConv(nn.Module):
@@ -198,4 +199,4 @@ def resnet152_ta():
 
 if __name__ == "__main__":
     net = resnet50_ta()
-    print(net)
+    stat(net, (3, 32, 32))

@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchstat import stat
 
 
 class SpaceAtt(nn.Module):
@@ -194,4 +195,4 @@ def resnet152_cs():
 
 if __name__ == "__main__":
     net = resnet50_cs()
-    print(net)
+    stat(net, (3, 32, 32))

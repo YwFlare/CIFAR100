@@ -1,6 +1,7 @@
 from torch import nn
 import torch
 import torch.nn.functional as F
+from torchstat import stat
 
 
 class DoubleAttention(nn.Module):
@@ -158,4 +159,4 @@ def resnet152_A2():
 
 if __name__ == '__main__':
     net = resnet50_A2()
-    print(net)
+    stat(net, (3, 32, 32))

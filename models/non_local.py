@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torchstat import stat
 
 """
 non_local_embedded_gaussian
@@ -229,4 +230,4 @@ def resnet152_nl():
 
 if __name__ == "__main__":
     net = resnet50_nl()
-    print(net)
+    stat(net, (3, 32, 32))

@@ -1,5 +1,7 @@
 import torch
+from thop import profile
 from torch import nn
+from torchstat import stat
 
 
 class SKConv(nn.Module):
@@ -140,4 +142,6 @@ def SKNet101(nums_class=100):
 
 if __name__ == '__main__':
     net = SKNet50(100)
-    print(net)
+    input = torch.randn(128, 3, 32, 32)
+    flops, params = profile(net, inputs=(input,))
+    print(flops / 1e9, params / 1e6)
